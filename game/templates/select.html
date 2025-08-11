@@ -65,7 +65,24 @@ function render(){
     `;
     row.appendChild(div);
   });
-  root.appendChild(row);
+  // 左右移動ボタン
+  const leftBtn = document.createElement('button');
+  leftBtn.textContent = '◀';
+  leftBtn.className = 'nav-btn left';
+  leftBtn.onclick = prev;
+  const rightBtn = document.createElement('button');
+  rightBtn.textContent = '▶';
+  rightBtn.className = 'nav-btn right';
+  rightBtn.onclick = next;
+  // 曲送りナビボタンを中央エリアに配置
+  const navWrap = document.createElement('div');
+  navWrap.style.display = 'flex';
+  navWrap.style.alignItems = 'center';
+  navWrap.style.justifyContent = 'center';
+  navWrap.appendChild(leftBtn);
+  navWrap.appendChild(row);
+  navWrap.appendChild(rightBtn);
+  root.appendChild(navWrap);
 
   info.innerHTML = `
     <div class="line">BPM: <span class="accent">${cur.bpm}</span> | Genre: <span class="accent">${cur.genre}</span></div>
