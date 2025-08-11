@@ -1,8 +1,12 @@
 
+"""
+Views for DonkMaster rhythm game.
+"""
+import os
+import json
+from pathlib import Path
 from django.http import JsonResponse, Http404
 from django.shortcuts import render
-from pathlib import Path
-import json, os
 
 def get_chart(request, slug):
     """譜面データを返す薄いAPI"""
@@ -15,13 +19,14 @@ BASE_DIR = Path(__file__).resolve().parent
 CHARTS_DIR = BASE_DIR / "charts"
 
 def index(request):
-    # 曲選択画面
+    """曲選択画面"""
     return render(request, "select.html")
 def play(request, slug):
-    # プレイ画面（既存のgame.htmlを流用）
+    """プレイ画面（既存のgame.htmlを流用）"""
     return render(request, "game.html", {"slug": slug})
 
 def chart(request, slug):
+    """譜面データを返す（旧API）"""
     f = CHARTS_DIR / f"{slug}.json"
     if not f.exists():
         raise Http404()
