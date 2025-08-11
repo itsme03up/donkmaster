@@ -4,11 +4,32 @@
   const D = document;
   const startBtn = D.getElementById('start');
   const statusEl = D.getElementById('status');
-  const slug = (window.__SLUG__ || new URLSearchParams(location.search).get('slug') || 'demo');
 
   let AC, src, gain, buf;
   let startAt = 0;
   let chart = null, lyrics = [], running = false;
+  let currentSlug = (window.__SLUG__ || new URLSearchParams(location.search).get('slug') || 'demo');
+
+  // 曲リストを取得してセレクトに反映
+  async function setupSongSelect() {
+    const sel = D.getElementById('song-select');
+    if (!sel) return;
+    const res = await fetch('/static/songlist.json');
+    const songs = await res.json();
+    sel.innerHTML = '';
+    for (const s of songs) {
+      const opt = D.createElement('option');
+      opt.value = s.slug;
+      opt.textContent = s.title.replace(/\.[a-z0-9]+$/i, '');
+      if (s.slug === currentSlug) opt.selected = true;
+      sel.appendChild(opt);
+    }
+    sel.onchange = () => {
+      currentSlug = sel.value;
+      statusEl.textContent = 'READY';
+      startBtn.disabled = false;
+    };
+  }
 
   // 歌詞データと音声をロード
   async function loadChart(slug){
@@ -53,7 +74,7 @@
   startBtn.onclick = async ()=>{
     startBtn.disabled = true;
     try {
-      await loadChart(slug);
+      await loadChart(currentSlug);
       await loadAudio(chart.audio);
       if (AC.state !== 'running') await AC.resume();
       // iOS解放（無音1サンプル）
@@ -65,4 +86,7 @@
       statusEl.textContent = 'audio error';
     }
   };
+
+  // 初期化
+  setupSongSelect();
 })();
