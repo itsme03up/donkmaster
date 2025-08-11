@@ -1,7 +1,15 @@
+
 from django.http import JsonResponse, Http404
 from django.shortcuts import render
 from pathlib import Path
-import json
+import json, os
+
+def get_chart(request, slug):
+    """譜面データを返す薄いAPI"""
+    path = os.path.join(os.path.dirname(__file__), 'charts', f'{slug}.json')
+    with open(path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    return JsonResponse(data)
 
 BASE_DIR = Path(__file__).resolve().parent
 CHARTS_DIR = BASE_DIR / "charts"
