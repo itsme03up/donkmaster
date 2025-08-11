@@ -22,7 +22,7 @@
 const songs = [
   { slug: "peimoikod", title: "Pei Moi Kod", bpm: 150, genre: "Hardbass", artist: "Itsme03", cover: "{% static 'img/demo.jpg' %}", preview: "{% static 'audio/demo.wav' %}" },
   { slug: "noway", title: "No Way", bpm: 150, genre: "Hardbass", artist: "Itsme03", cover: "{% static 'img/noway.png' % }", preview: "{% static 'audio/noway_preview.ogg' %}" },
-  { slug: "sukasosi", title: "Suka Sosi", bpm: 160, genre: "Hardbass", artist: "Itsme03", cover: "{% static 'img/placeholder.jpg' %}", preview: "{% static 'audio/demo.wav' %}" },
+  { slug: "sukasosi", title: "Suka Sosi", bpm: 160, genre: "Hardbass", artist: "Itsme03", cover: "{% static 'img/sukasosi.png' %}", preview: "{% static 'audio/demo.wav' %}" },
   { slug: "zjelezo", title: "Zhelezo", bpm: 150, genre: "Hardbass", artist: "Itsme03", cover: "{% static 'img/demo.jpg' %}", preview: "{% static 'audio/demo.wav' %}" },
   { slug: "noway", title: "No Way", bpm: 150, genre: "Hardbass", artist: "DJ Gopnik", cover: "{% static 'img/no_way.png' %}", preview: "{% static 'audio/noway_preview.ogg' %}" },
   { slug: "demo2", title: "Demo Song", bpm: 160, genre: "Hardbass", artist: "Anon", cover: "{% static 'img/placeholder.jpg' %}", preview: "{% static 'audio/demo.wav' %}" },
@@ -55,11 +55,11 @@ function playPreview(url){
 function render(){
   root.innerHTML = '';
   const row = document.createElement('div'); row.className = 'song-row';
-  const prev = songs[(idx-1 + songs.length)%songs.length];
-  const cur  = songs[idx];
-  const next = songs[(idx+1) % songs.length];
+  const prevSong = songs[(idx-1 + songs.length)%songs.length];
+  const curSong  = songs[idx];
+  const nextSong = songs[(idx+1) % songs.length];
 
-  [prev, cur, next].forEach((s, i)=>{
+  [prevSong, curSong, nextSong].forEach((s, i)=>{
     const div = document.createElement('div');
     div.className = 'song-card ' + (i===0?'prev': i===1?'active':'next');
     // タイトル表示を削除（画像のみ）
@@ -88,11 +88,11 @@ function render(){
   root.appendChild(navWrap);
 
   info.innerHTML = `
-    <div class="line">BPM: <span class="accent">${cur.bpm}</span> | Genre: <span class="accent">${cur.genre}</span></div>
-    <div class="line">Artist: <span class="accent">${cur.artist}</span></div>
+    <div class="line">BPM: <span class="accent">${curSong.bpm}</span> | Genre: <span class="accent">${curSong.genre}</span></div>
+    <div class="line">Artist: <span class="accent">${curSong.artist}</span></div>
     <div class="line">Press ⏎ to <span class="accent">PLAY</span></div>
   `;
-  playPreview(cur.preview);
+  playPreview(curSong.preview);
 }
 
 function next(){ idx = (idx+1)%songs.length; render(); }
