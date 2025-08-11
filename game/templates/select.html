@@ -20,7 +20,10 @@
   <canvas id="eq" width="800" height="80" class="eq"></canvas>
   <script>
 const songs = [
-  { slug: "demo", title: "Demo Song", bpm: 150, genre: "Hardbass", artist: "DonkMaster", cover: "{% static 'img/demo.jpg' %}", preview: "{% static 'audio/demo.wav' %}" },
+  { slug: "peimoikod", title: "Pei Moi Kod", bpm: 150, genre: "Hardbass", artist: "Itsme03", cover: "{% static 'img/demo.jpg' %}", preview: "{% static 'audio/demo.wav' %}" },
+  { slug: "noway", title: "No Way", bpm: 150, genre: "Hardbass", artist: "Itsme03", cover: "{% static 'img/noway.png' % }", preview: "{% static 'audio/noway_preview.ogg' %}" },
+  { slug: "sukasosi", title: "Suka Sosi", bpm: 160, genre: "Hardbass", artist: "Itsme03", cover: "{% static 'img/placeholder.jpg' %}", preview: "{% static 'audio/demo.wav' %}" },
+  { slug: "zjelezo", title: "Zhelezo", bpm: 150, genre: "Hardbass", artist: "Itsme03", cover: "{% static 'img/demo.jpg' %}", preview: "{% static 'audio/demo.wav' %}" },
   { slug: "noway", title: "No Way", bpm: 150, genre: "Hardbass", artist: "DJ Gopnik", cover: "{% static 'img/no_way.png' %}", preview: "{% static 'audio/noway_preview.ogg' %}" },
   { slug: "demo2", title: "Demo Song", bpm: 160, genre: "Hardbass", artist: "Anon", cover: "{% static 'img/placeholder.jpg' %}", preview: "{% static 'audio/demo.wav' %}" },
 ];
@@ -59,9 +62,9 @@ function render(){
   [prev, cur, next].forEach((s, i)=>{
     const div = document.createElement('div');
     div.className = 'song-card ' + (i===0?'prev': i===1?'active':'next');
+    // タイトル表示を削除（画像のみ）
     div.innerHTML = `
       <img class='cover' src='${s.cover ? s.cover : "{% static 'img/placeholder.jpg' %}"}' alt="${s.title}">
-      <div class="title">${s.title}</div>
     `;
     row.appendChild(div);
   });
