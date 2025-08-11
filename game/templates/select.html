@@ -1,88 +1,111 @@
 {% load static %}
-<!doctype html><html><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>曲選択 | DonkMaster</title>
-<link rel="stylesheet" href="{% static 'style.css' %}">
-</head><body>
-<div class="song-select">
-  <canvas id="bgfx"></canvas>
-  <div class="song-carousel">
-    <div class="song prev" id="prev-song"></div>
-    <div class="song active" id="active-song">
-      <!-- ジャケット or フレーム＋曲名 -->
-    </div>
-    <div class="song next" id="next-song"></div>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DonkMaster 曲選択</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <div class="bg-spin"></div>
+  <div class="header"></div>
+  <div class="song-select">
+    <div id="song-list"></div>
+    <div id="info" class="info"></div>
+    <button class="play" id="play">▶ PLAY</button>
   </div>
-  <div class="side-panel" id="side-panel"></div>
-  <button class="play-btn" id="play-btn">▶ PLAY</button>
-</div>
-<audio id="se-tick" src="{% static 'audio/no_way.ogg' %}" preload="auto" style="display:none"></audio>
-<script>
-// 曲リスト（画像・情報付き）
+  <canvas id="eq" width="800" height="80" class="eq"></canvas>
+  <script>
 const songs = [
-  { slug: 'demo', title: 'Demo Song', bpm: 150, genre: 'IIDX', artist: 'Test Artist', img: null, color: '#0ff', theme: 'cool' },
-  { slug: 'no_way', title: 'No Way', bpm: 150, genre: 'Hardbass', artist: 'DJ Gopnik', img: "{% static 'img/no_way.jpg' %}", color: '#ff0', theme: 'hardbass', flag: 'ru' }
+  { slug: "demo", title: "Demo Song", bpm: 150, genre: "Hardbass", artist: "DonkMaster", cover: "{% static 'img/demo.jpg' %}", preview: "{% static 'audio/demo.wav' %}" },
+  { slug: "noway", title: "No Way", bpm: 150, genre: "Hardbass", artist: "DJ Gopnik", cover: "{% static 'img/noway.jpg' %}", preview: "{% static 'audio/noway_preview.ogg' %}" },
+  { slug: "demo2", title: "Demo Song", bpm: 160, genre: "Hardbass", artist: "Anon", cover: "{% static 'img/placeholder.jpg' %}", preview: "{% static 'audio/demo.wav' %}" },
 ];
-let idx = 0;
-const prev = document.getElementById('prev-song');
-const active = document.getElementById('active-song');
-const next = document.getElementById('next-song');
-const panel = document.getElementById('side-panel');
-const playBtn = document.getElementById('play-btn');
-const seTick = document.getElementById('se-tick');
-function render() {
-  // 前
-  const prevIdx = (idx + songs.length - 1) % songs.length;
-  prev.innerHTML = songs[prevIdx].img ? `<img src="${songs[prevIdx].img}" alt="${songs[prevIdx].title}"><div>${songs[prevIdx].title}</div>` : `<div class="neon-frame">${songs[prevIdx].title}</div>`;
-  // 中央
-  const s = songs[idx];
-  active.innerHTML = s.img ? `<img src="${s.img}" alt="${s.title}"><h2>${s.title}</h2>` : `<div class="neon-frame"><h2>${s.title}</h2></div>`;
-  // BPM/ジャンル/アーティスト/国旗
-  let info = `<p>BPM: ${s.bpm} | Genre: ${s.genre}</p><p>Artist: ${s.artist}</p>`;
-  if(s.genre==='Hardbass') info += `<span class="flag ${s.flag}"></span>`;
-  panel.innerHTML = info;
-  // 次
-  const nextIdx = (idx + 1) % songs.length;
-  next.innerHTML = songs[nextIdx].img ? `<img src="${songs[nextIdx].img}" alt="${songs[nextIdx].title}"><div>${songs[nextIdx].title}</div>` : `<div class="neon-frame">${songs[nextIdx].title}</div>`;
-  // 色テーマ
-  document.body.className = s.theme;
+let idx = 1; // 中央から開始
+const root = document.querySelector('#song-list');
+const info = document.querySelector('#info');
+
+let AC, source, analyser, dataArr, previewAudio;
+const eq = document.getElementById('eq');
+const ectx = eq.getContext('2d');
+
+function ensureAudio(){
+  if (AC) return;
+  AC = new (window.AudioContext||window.webkitAudioContext)();
+  analyser = AC.createAnalyser(); analyser.fftSize = 512;
+  dataArr = new Uint8Array(analyser.frequencyBinCount);
+  previewAudio = new Audio(); previewAudio.loop = true; previewAudio.crossOrigin = 'anonymous';
+  const src = AC.createMediaElementSource(previewAudio);
+  src.connect(analyser); analyser.connect(AC.destination);
 }
-function slide(dir) {
-  idx = (idx + dir + songs.length) % songs.length;
-  seTick.currentTime = 0; seTick.play();
-  render();
+
+function playPreview(url){
+  ensureAudio();
+  if (previewAudio.src !== location.origin + url) previewAudio.src = url;
+  previewAudio.volume = 0.6;
+  previewAudio.play().catch(()=>{/* ユーザ操作後で再生される */});
 }
-document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowLeft') slide(-1);
-  if(e.key==='ArrowRight') slide(1);
-  if(e.key==='Enter') playBtn.click();
+
+function render(){
+  root.innerHTML = '';
+  const row = document.createElement('div'); row.className = 'song-row';
+  const prev = songs[(idx-1 + songs.length)%songs.length];
+  const cur  = songs[idx];
+  const next = songs[(idx+1) % songs.length];
+
+  [prev, cur, next].forEach((s, i)=>{
+    const div = document.createElement('div');
+    div.className = 'song-card ' + (i===0?'prev': i===1?'active':'next');
+    div.innerHTML = `
+      <img class='cover' src='${s.cover ? s.cover : "{% static 'img/placeholder.jpg' %}"}' alt="${s.title}">
+      <div class="title">${s.title}</div>
+    `;
+    row.appendChild(div);
+  });
+  root.appendChild(row);
+
+  info.innerHTML = `
+    <div class="line">BPM: <span class="accent">${cur.bpm}</span> | Genre: <span class="accent">${cur.genre}</span></div>
+    <div class="line">Artist: <span class="accent">${cur.artist}</span></div>
+    <div class="line">Press ⏎ to <span class="accent">PLAY</span></div>
+  `;
+  playPreview(cur.preview);
+}
+
+function next(){ idx = (idx+1)%songs.length; render(); }
+function prev(){ idx = (idx-1 + songs.length)%songs.length; render(); }
+
+document.addEventListener('keydown', (e)=>{
+  if (e.key === 'ArrowRight') next();
+  if (e.key === 'ArrowLeft')  prev();
+  if (e.key === 'Enter')      startGame();
 });
-document.addEventListener('wheel',e=>{ if(e.deltaY<0) slide(-1); else if(e.deltaY>0) slide(1); });
-playBtn.onclick=()=>{ location.href = `/play/${songs[idx].slug}`; };
-render();
-// BPM同期ストロボ/アナライザー簡易実装
-const bgfx = document.getElementById('bgfx');
-bgfx.width = window.innerWidth; bgfx.height = window.innerHeight;
-const g = bgfx.getContext('2d');
-let t = 0;
-function anim() {
-  t += 1/60;
-  const s = songs[idx];
-  // ストロボ
-  if(s.bpm) {
-    const beat = (t * s.bpm / 60) % 1;
-    g.clearRect(0,0,bgfx.width,bgfx.height);
-    g.fillStyle = beat<0.1 ? s.color : '#111';
-    g.fillRect(0,0,bgfx.width,8);
-    // EQ風
-    for(let i=0;i<20;i++){
-      const h = Math.abs(Math.sin(t*2+i))*40+20;
-      g.fillStyle = s.color;
-      g.fillRect(30+i*20,bgfx.height-60-h,12,h);
-    }
-  }
-  requestAnimationFrame(anim);
+
+document.getElementById('play')?.addEventListener('click', startGame);
+
+function startGame(){
+  const slug = songs[idx].slug;
+  window.location.href = `/play/${encodeURIComponent(slug)}`;
 }
-anim();
-</script>
-</body></html>
+
+function drawEQ(){
+  requestAnimationFrame(drawEQ);
+  if (!analyser) return;
+  analyser.getByteFrequencyData(dataArr);
+  const W = eq.width, H = eq.height; ectx.clearRect(0,0,W,H);
+  const bars = 48, step = Math.floor(dataArr.length / bars);
+  for (let i=0;i<bars;i++){
+    const v = dataArr[i*step]/255;
+    const h = Math.max(2, v * H);
+    const x = (W/bars)*i + 2;
+    ectx.fillStyle = `rgba(255,233,0,${0.65 + v*0.35})`;
+    ectx.fillRect(x, H-h, (W/bars)-6, h);
+  }
+}
+render(); drawEQ();
+  </script>
+</body>
+</html>
