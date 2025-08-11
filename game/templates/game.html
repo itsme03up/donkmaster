@@ -1,20 +1,45 @@
 {% load static %}
 <!doctype html><html><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rhythm MVP (Django + WebAudio)</title>
-<link rel="stylesheet" href="{% static 'style.css' %}">
-</head><body>
-<div class="hud">
-  <button id="start" class="btn">START</button>
-  <div id="status">ready</div>
-  <div id="combo">Combo: 0</div>
-  <div id="acc">Acc: 100%</div>
-  <div id="offset">Offset: <span id="offv">0</span>ms
-    <button class="btn sm" data-off="-5">-5</button>
-    <button class="btn sm" data-off="5">+5</button>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DonkMaster</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- 回転ストライプ背景 -->
+  <div class="bg-spin"></div>
+  <!-- 上部ネオン帯 -->
+  <div class="header"></div>
+
+  <!-- ステージ -->
+  <div class="stage-wrap">
+    <canvas id="stage"></canvas>
+    <!-- 判定ライン＆コンボ -->
+    <div class="judge-ui">
+      <div class="judge-line"></div>
+      <div id="big-combo" class="big-combo">0</div>
+      <div id="fastslow" class="fastslow"> </div>
+    </div>
   </div>
-</div>
-<canvas id="stage"></canvas>
-<script>window.__SLUG__="{{ slug }}";</script>
-<script src="{% static 'game_lets_csharp.js' %}"></script>
-</body></html>
+
+  <!-- 下部HUD（ガラス） -->
+  <div class="hud glass">
+    <button id="start" class="btn neon">▶ START</button>
+    <div id="status" class="badge">READY</div>
+    <div id="acc" class="badge">ACC 100%</div>
+    <div class="flex-1"></div>
+    <div class="badge">OFFSET <span id="offv">0</span>ms</div>
+    <div class="btn sm" data-off="-5">-5</div>
+    <div class="btn sm" data-off="5">+5</div>
+  </div>
+
+  <!-- 進行バー -->
+  <div class="progress"><div id="progbar" class="bar"></div></div>
+
+  <script>window.__SLUG__="{{ slug }}";</script>
+  <script src="{% static 'game_lets_csharp.js' %}"></script>
+  <script src="{% static 'skin_fx.js' %}"></script>
+</body>
+</html>

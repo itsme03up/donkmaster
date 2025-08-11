@@ -1,3 +1,47 @@
+:root{
+  --bg:#0b0e14; --neon:#ffe900; --cyan:#22d3ee; --glass:rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#e6edf3;font-family:'Orbitron',system-ui;overflow:hidden}
+
+/* 背景と上帯 */
+.bg-spin{display:none;}
+.header{position:fixed;top:0;left:0;right:0;height:6px;
+background:linear-gradient(90deg,var(--neon),#00fff0,var(--neon));
+background-size:200% 100%;animation:flow 4s linear infinite;
+box-shadow:0 0 18px rgba(255,233,0,.7);z-index:5}
+@keyframes flow{to{background-position:200% 0}}
+
+.stage-wrap{position:fixed;inset:6px 0 80px 0; display:grid; place-items:center}
+#stage{display:block;width:100vw;height:100%}
+
+/* 判定UI */
+.judge-ui{position:absolute;inset:0;pointer-events:none}
+.judge-line{position:absolute;left:0;right:0;bottom:10%;height:3px;
+background:var(--cyan); box-shadow:0 0 18px var(--cyan)}
+.big-combo{position:absolute;left:50%;bottom:14%;transform:translateX(-50%);
+font-size: clamp(28px, 6vw, 64px); font-weight:700; letter-spacing:.04em;
+text-shadow:0 0 18px rgba(255,233,0,.8); color:var(--neon); mix-blend-mode:screen}
+.fastslow{position:absolute;left:50%;bottom:22%;transform:translateX(-50%);
+font-size:clamp(12px,2.2vw,18px); color:#fff; opacity:.9}
+
+/* HUD */
+.hud{position:fixed;left:12px;right:12px;bottom:12px;display:flex;gap:12px;
+align-items:center;padding:10px 12px;border-radius:12px}
+.glass{background:linear-gradient(180deg, rgba(0,0,0,.65), rgba(0,0,0,.35));
+border:1px solid rgba(255,233,0,.25);box-shadow:0 0 16px rgba(255,233,0,.2);backdrop-filter:blur(6px)}
+.flex-1{flex:1}
+.btn{background:transparent;color:#000;border:2px solid var(--neon);padding:10px 14px;border-radius:10px;cursor:pointer}
+.btn.neon{background:var(--neon);box-shadow:0 0 16px rgba(255,233,0,.6)}
+.btn.sm{font-size:12px;padding:6px 8px;border-color:#888;color:#e6edf3}
+.badge{padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+
+/* 進行バー */
+.progress{position:fixed;left:12px;right:12px;bottom:64px;height:6px;background:#141922;border-radius:6px;overflow:hidden}
+.progress .bar{height:100%;width:0;background:var(--neon);box-shadow:0 0 12px rgba(255,233,0,.7)}
+
+/* レーンとノーツの見た目（Canvasで描く色だけ指定） */
+:root{ --laneGlow: rgba(255,255,255,.18); --noteFill: #ffe900; }
 .nav-btn {
   font-size: 1.5rem;
   display: flex;

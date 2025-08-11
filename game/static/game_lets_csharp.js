@@ -83,6 +83,7 @@
   function loop(){
     if(!running) return;
     const gms = gameTimeMs();
+    const judgeY = cvs.height*0.9;
 
     // 先読みスポーン：t - fallMs が見え始め
     while (upcoming.length && (upcoming[0].t - fallMs) <= gms){
@@ -97,18 +98,23 @@
     // 描画
     ctx.clearRect(0,0,cvs.width,cvs.height);
     // レーン
-    ctx.globalAlpha=0.15; ctx.fillStyle='#fff';
+    ctx.globalAlpha=0.18; ctx.fillStyle='var(--laneGlow, #fff)';
     for(let l=1;l<=lanes;l++){ ctx.fillRect(laneX(l)-2, 0, 4, cvs.height) }
     ctx.globalAlpha=1;
     // 判定ライン
-    ctx.fillStyle = '#22d3ee';
-    ctx.fillRect(0, cvs.height*0.9, cvs.width, 3);
+    ctx.fillStyle = 'var(--cyan, #22d3ee)';
+    ctx.fillRect(0, judgeY, cvs.width, 3);
     // ノーツ（円）
-    ctx.fillStyle = '#ffe900';
+    ctx.fillStyle = '#ffe900'; // 明るい黄色で固定
     for (const n of active){
       const y = noteY(n.t);
       ctx.beginPath(); ctx.arc(laneX(n.lane), y, 12, 0, Math.PI*2); ctx.fill();
     }
+
+    // エフェクトオーバーレイ
+    if (window.DonkSkin) DonkSkin.drawOverlay(ctx);
+    // 進捗バー
+    if (window.DonkSkin && buf) DonkSkin.setProgress(Math.max(0, Math.min(1, (AC.currentTime-startAt)/buf.duration)));
 
     requestAnimationFrame(loop);
   }
@@ -130,6 +136,7 @@
 
   function judge(l){
     const gms = gameTimeMs();
+    const judgeY = cvs.height*0.9;
     // lane一致のうち最も近い
     let bi=-1, bd=1e9;
     for (let i=0;i<active.length;i++){
@@ -146,12 +153,16 @@
     else if (d<=80){ hit=true; score=40; }   // Good
 
     if (hit){
+      const n = active[bi];
       active.splice(bi,1);
       combo++; hits++;
-      comboEl.textContent = `Combo: ${combo}`;
-      accEl.textContent = `Acc: ${Math.round(hits/Math.max(1,total)*100)}%`;
-      // FAST/SLOW の表示を入れたいとき
-      // const delta = gms - n.t; // <0=FAST, >0=SLOW
+      // 中央コンボUI
+      const bigCombo = document.getElementById('big-combo');
+      if (bigCombo) bigCombo.textContent = combo;
+      accEl.textContent = `ACC ${Math.round(hits/Math.max(1,total)*100)}%`;
+      // FAST/SLOW/エフェクト
+      const delta = gms - active[bi]?.t ?? 0;
+      if (window.DonkSkin) DonkSkin.onHit(gms-n.t, laneX(l), judgeY, combo, (hits/Math.max(1,total)));
     }
   }
 
