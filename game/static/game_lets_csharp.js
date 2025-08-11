@@ -158,12 +158,18 @@
   // ====== 起動フロー ======
   startBtn.onclick = async ()=>{
     startBtn.disabled = true;
-    await loadChart(slug);
-    await loadAudio(chart.audio);
-    // iOS解放（無音1サンプル）
-    AC.resume && AC.resume();
-    const s=AC.createBufferSource(); s.buffer=AC.createBuffer(1,1,AC.sampleRate);
-    s.connect(AC.destination); s.start();
-    setTimeout(play, 100);
+    try {
+      await loadChart(slug);
+      await loadAudio(chart.audio);
+      // AudioContextを必ずユーザー操作直後にresume
+      if (AC.state !== 'running') await AC.resume();
+      // iOS解放（無音1サンプル）
+      const s=AC.createBufferSource(); s.buffer=AC.createBuffer(1,1,AC.sampleRate);
+      s.connect(AC.destination); s.start();
+      setTimeout(play, 100);
+    } catch(e) {
+      alert('音声再生エラー: ' + (e.message || e));
+      statusEl.textContent = 'audio error';
+    }
   };
 })();
