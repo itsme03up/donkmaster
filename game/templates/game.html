@@ -35,6 +35,24 @@
     <div class="btn sm" data-off="5">+5</div>
   </div>
 
+  <!-- 翻訳UI -->
+  <div class="translate-ui glass" style="margin:24px auto;max-width:600px;padding:16px 24px;border-radius:16px;">
+    <h2 style="margin-top:0">テキスト翻訳</h2>
+    <textarea id="trans-src" rows="3" style="width:100%;font-size:1.1em;"></textarea>
+    <div style="margin:8px 0;display:flex;gap:8px;align-items:center;">
+      <label>言語:</label>
+      <select id="trans-lang">
+        <option value="en">英語</option>
+        <option value="ru">ロシア語</option>
+        <option value="ja">日本語</option>
+        <option value="zh">中国語</option>
+        <option value="uk">ウクライナ語</option>
+      </select>
+      <button id="trans-btn" class="btn neon">翻訳</button>
+    </div>
+    <div id="trans-result" style="min-height:2em;font-size:1.2em;color:#ffe900;"></div>
+  </div>
+
   <!-- 進行バー -->
   <div class="progress"><div id="progbar" class="bar"></div></div>
 

@@ -87,6 +87,38 @@
     }
   };
 
+  // 翻訳API呼び出し
+  async function translateText(text, targetLang) {
+    const form = new FormData();
+    form.append('text', text);
+    form.append('target', targetLang);
+    const res = await fetch('/api/translate', { method: 'POST', body: form });
+    const data = await res.json();
+    if (data.translated) return data.translated;
+    throw new Error(data.error || '翻訳失敗');
+  }
+
+  // 翻訳UIイベント
+  function setupTranslateUI() {
+    const src = document.getElementById('trans-src');
+    const lang = document.getElementById('trans-lang');
+    const btn = document.getElementById('trans-btn');
+    const result = document.getElementById('trans-result');
+    if (!src || !lang || !btn || !result) return;
+    btn.onclick = async () => {
+      btn.disabled = true;
+      result.textContent = '翻訳中...';
+      try {
+        const translated = await translateText(src.value, lang.value);
+        result.textContent = translated;
+      } catch(e) {
+        result.textContent = e.message;
+      }
+      btn.disabled = false;
+    };
+  }
+
   // 初期化
   setupSongSelect();
+  setupTranslateUI();
 })();

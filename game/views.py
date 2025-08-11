@@ -1,3 +1,32 @@
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+import requests
+
+# Google Translate APIキー（環境変数やsettings.pyで管理推奨）
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY', '')
+
+@csrf_exempt
+@require_POST
+def translate_api(request):
+    text = request.POST.get('text')
+    target_lang = request.POST.get('target')
+    if not text or not target_lang:
+        return JsonResponse({'error': 'Missing text or target'}, status=400)
+    # Google Translate API呼び出し
+    url = 'https://translation.googleapis.com/language/translate/v2'
+    params = {
+        'q': text,
+        'target': target_lang,
+        'format': 'text',
+        'key': GOOGLE_API_KEY,
+    }
+    try:
+        resp = requests.post(url, data=params)
+        data = resp.json()
+        translated = data['data']['translations'][0]['translatedText']
+        return JsonResponse({'translated': translated})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 """
 Views for DonkMaster rhythm game.
