@@ -5,7 +5,6 @@
 body{margin:0;background:var(--bg);color:#e6edf3;font-family:'Orbitron',system-ui;overflow:hidden}
 
 /* 背景と上帯 */
-.bg-spin{display:none;}
 .header{position:fixed;top:0;left:0;right:0;height:6px;
 background:linear-gradient(90deg,var(--neon),#00fff0,var(--neon));
 background-size:200% 100%;animation:flow 4s linear infinite;
