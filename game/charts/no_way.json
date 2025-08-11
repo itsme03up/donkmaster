@@ -1,18 +1,10 @@
 {
   "bpm": 150,
   "audio": "/static/audio/no_way.ogg",
-  "offset_ms": 0,
-  "notes": [
-    { "t": 1000, "lane": 1, "type": "tap" },
-    { "t": 1100, "lane": 2, "type": "tap" },
-    { "t": 1200, "lane": 3, "type": "tap" },
-    { "t": 1300, "lane": 4, "type": "tap" },
-    { "t": 1400, "lane": 1, "type": "tap" },
-    { "t": 1500, "lane": 2, "type": "tap" },
-    { "t": 1600, "lane": 3, "type": "tap" },
-    { "t": 1700, "lane": 4, "type": "tap" }
-  ],
-  "markers": [
-    { "t": 900, "label": "intro" }
+  "lyrics": [
+    { "t": 1000, "text": "Привет!" },
+    { "t": 2500, "text": "Как дела?" },
+    { "t": 4000, "text": "Я люблю музыку!" },
+    { "t": 6000, "text": "Вперёд!" }
   ]
 }

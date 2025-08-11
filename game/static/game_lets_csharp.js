@@ -13,8 +13,7 @@
   let fallMs = 1600;              // 落下時間
   let lanes = 4;
 
-  let chart = null, notes = [], upcoming = [], active = [];
-  let running = false, total=0, hits=0, combo=0;
+  let chart = null, lyrics = [], running = false;
 
   // 画面
   function resize(){ cvs.width = innerWidth; cvs.height = innerHeight*0.72 }
@@ -39,12 +38,7 @@
   async function loadChart(slug){
     const r = await fetch(`/charts/${slug}.json`, {cache:'no-cache'});
     chart = await r.json();
-    offsetMs = chart.offset_ms|0;
-    fallMs   = chart.fall_ms || 1600;
-    lanes    = chart.lanes || 4;
-    notes = chart.notes.slice().sort((a,b)=>a.t-b.t);
-    total = notes.length;
-    upcoming = notes.slice(); active.length=0;
+    lyrics = (chart.lyrics || []).slice().sort((a,b)=>a.t-b.t);
   }
   async function loadAudio(url){
     AC = AC || new (window.AudioContext||window.webkitAudioContext)();
@@ -62,9 +56,9 @@
     const delay = 0.8; // 秒：スタート演出用ディレイ
     startAt = AC.currentTime + delay;
     src.start(startAt);          // ← 予約再生（ズレ小）
-    running = true; combo=0; hits=0;
+    running = true;
     statusEl.textContent = 'playing';
-    loop();
+    showLyricsLoop();
   }
 
   // ====== 3) 落下式の座標計算 ======
@@ -80,43 +74,21 @@
   }
 
   // ====== 4) スポーン・ミス処理・描画 ======
-  function loop(){
-    if(!running) return;
-    const gms = gameTimeMs();
-    const judgeY = cvs.height*0.9;
 
-    // 先読みスポーン：t - fallMs が見え始め
-    while (upcoming.length && (upcoming[0].t - fallMs) <= gms){
-      active.push(upcoming.shift());
+  // 歌詞表示ループ
+  function showLyricsLoop(){
+    if (!running) return;
+    const gms = (AC.currentTime - startAt) * 1000;
+    let cur = null;
+    for (let i = 0; i < lyrics.length; i++) {
+      if (gms >= lyrics[i].t) cur = lyrics[i];
+      else break;
     }
-
-    // Miss（かなり遅れたノーツは消す）
-    for (let i=0;i<active.length;i++){
-      if (active[i].t < gms - 120){ active.splice(i,1); i--; combo=0; }
-    }
-
-    // 描画
-    ctx.clearRect(0,0,cvs.width,cvs.height);
-    // レーン
-    ctx.globalAlpha=0.18; ctx.fillStyle='var(--laneGlow, #fff)';
-    for(let l=1;l<=lanes;l++){ ctx.fillRect(laneX(l)-2, 0, 4, cvs.height) }
-    ctx.globalAlpha=1;
-    // 判定ライン
-    ctx.fillStyle = 'var(--cyan, #22d3ee)';
-    ctx.fillRect(0, judgeY, cvs.width, 3);
-    // ノーツ（円）
-    ctx.fillStyle = '#ffe900'; // 明るい黄色で固定
-    for (const n of active){
-      const y = noteY(n.t);
-      ctx.beginPath(); ctx.arc(laneX(n.lane), y, 12, 0, Math.PI*2); ctx.fill();
-    }
-
-    // エフェクトオーバーレイ
-    if (window.DonkSkin) DonkSkin.drawOverlay(ctx);
+    const lyricsText = document.getElementById('lyrics-text');
+    if (lyricsText) lyricsText.textContent = cur ? cur.text : '';
     // 進捗バー
     if (window.DonkSkin && buf) DonkSkin.setProgress(Math.max(0, Math.min(1, (AC.currentTime-startAt)/buf.duration)));
-
-    requestAnimationFrame(loop);
+    requestAnimationFrame(showLyricsLoop);
   }
 
   // ====== 5) 判定：レーンの最も近いノーツ1個 ======

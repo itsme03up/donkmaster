@@ -1,3 +1,25 @@
+/* 歌詞表示用 */
+.lyrics-ui {
+  position: absolute;
+  left: 0; right: 0; top: 40%;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 10;
+}
+.lyrics-text {
+  font-size: clamp(28px, 5vw, 54px);
+  color: #fff;
+  text-shadow: 0 2px 16px #000, 0 0 18px #ffe900cc;
+  font-family: 'Orbitron', 'Bebas Neue', 'sans-serif';
+  letter-spacing: .04em;
+  background: rgba(0,0,0,0.18);
+  border-radius: 18px;
+  padding: 0.2em 1.2em;
+  min-width: 2em;
+  text-align: center;
+  transition: opacity 0.2s;
+}
 :root{
   --bg:#0b0e14; --neon:#ffe900; --cyan:#22d3ee; --glass:rgba(0,0,0,.45);
 }
