@@ -1,0 +1,5 @@
+*{box-sizing:border-box}body{margin:0;background:#0b0e14;color:#e6edf3;font-family:ui-sans-serif,system-ui}
+.hud{display:flex;gap:12px;align-items:center;padding:10px 12px;background:rgba(255,255,255,.03);backdrop-filter:blur(4px);position:sticky;top:0}
+.btn{background:#2563eb;color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
+.btn.sm{padding:6px 8px;font-size:12px}
+#stage{display:block;width:100vw;height:72vh;background:#0f1320}

@@ -1,0 +1,63 @@
+{
+  "bpm": 150,
+  "audio": "/static/audio/demo.wav",
+  "offset_ms": 0,
+  "notes": [
+    {
+      "t": 800,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "t": 1200,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "t": 1600,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "t": 2000,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "t": 2400,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "t": 2800,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "t": 3200,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "t": 3600,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "t": 4000,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "t": 4400,
+      "lane": 2,
+      "type": "tap"
+    }
+  ],
+  "markers": [
+    {
+      "t": 600,
+      "label": "drop"
+    }
+  ]
+}

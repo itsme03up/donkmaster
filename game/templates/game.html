@@ -1,0 +1,20 @@
+{% load static %}
+<!doctype html><html><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rhythm MVP (Django + WebAudio)</title>
+<link rel="stylesheet" href="{% static 'style.css' %}">
+</head><body>
+<div class="hud">
+  <button id="start" class="btn">START</button>
+  <div id="status">ready</div>
+  <div id="combo">Combo: 0</div>
+  <div id="acc">Acc: 100%</div>
+  <div id="offset">Offset: <span id="offv">0</span>ms
+    <button class="btn sm" data-off="-5">-5</button>
+    <button class="btn sm" data-off="5">+5</button>
+  </div>
+</div>
+<canvas id="stage"></canvas>
+<script>window.__SLUG__="{{ slug }}";</script>
+<script src="{% static 'game.js' %}"></script>
+</body></html>

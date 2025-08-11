@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.pkl
+*.so
+
+# Django
+db.sqlite3
+/staticfiles/
+/media/
+
+# Environment
+.env
+*.env
+.env.*
+
+# macOS
+.DS_Store
+
+# VSCode
+.vscode/
+
+# Node / JS (if you use npm for JS libs)
+node_modules/
+
+# Logs
+*.log
