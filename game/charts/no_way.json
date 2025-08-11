@@ -1,0 +1,18 @@
+{
+  "bpm": 120,
+  "audio": "/static/audio/no_way.ogg",
+  "offset_ms": 0,
+  "notes": [
+    { "t": 1000, "lane": 1, "type": "tap" },
+    { "t": 1500, "lane": 2, "type": "tap" },
+    { "t": 2000, "lane": 3, "type": "tap" },
+    { "t": 2500, "lane": 4, "type": "tap" },
+    { "t": 3000, "lane": 1, "type": "tap" },
+    { "t": 3500, "lane": 2, "type": "tap" },
+    { "t": 4000, "lane": 3, "type": "tap" },
+    { "t": 4500, "lane": 4, "type": "tap" }
+  ],
+  "markers": [
+    { "t": 900, "label": "intro" }
+  ]
+}

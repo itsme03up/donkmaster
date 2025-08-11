@@ -3,3 +3,29 @@
 .btn{background:#2563eb;color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
 .btn.sm{padding:6px 8px;font-size:12px}
 #stage{display:block;width:100vw;height:72vh;background:#0f1320}
+
+/* 追加CSS: 曲選択画面用 */
+.song-item {
+  margin: 1em 0;
+  padding: 1em;
+  background: #f0f4f8;
+  border-radius: 8px;
+  font-size: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 400px;
+}
+.song-item button {
+  font-size: 1em;
+  padding: 0.5em 1.2em;
+  border-radius: 6px;
+  background: #22d3ee;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.song-item button:hover {
+  background: #0ea5e9;
+}

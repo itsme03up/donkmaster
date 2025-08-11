@@ -1,0 +1,23 @@
+{% load static %}
+<!doctype html><html><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>曲選択 | DonkMaster</title>
+<link rel="stylesheet" href="{% static 'style.css' %}">
+</head><body>
+<h1>曲選択</h1>
+<div id="song-list"></div>
+<script>
+// 仮の曲リスト（本来はAPIで取得）
+const songs = [
+  { slug: 'demo', title: 'Demo Song', audio: 'demo.wav' },
+  { slug: 'no_way', title: 'No Way', audio: 'no_way.ogg' }
+];
+const list = document.getElementById('song-list');
+songs.forEach(song => {
+  const div = document.createElement('div');
+  div.className = 'song-item';
+  div.innerHTML = `<b>${song.title}</b> <button onclick="location.href='/play/${song.slug}'">プレイ</button>`;
+  list.appendChild(div);
+});
+</script>
+</body></html>

@@ -7,7 +7,11 @@ BASE_DIR = Path(__file__).resolve().parent
 CHARTS_DIR = BASE_DIR / "charts"
 
 def index(request):
-    return render(request, "game.html", {"slug":"demo"})
+    # 曲選択画面
+    return render(request, "select.html")
+def play(request, slug):
+    # プレイ画面（既存のgame.htmlを流用）
+    return render(request, "game.html", {"slug": slug})
 
 def chart(request, slug):
     f = CHARTS_DIR / f"{slug}.json"

@@ -28,3 +28,9 @@ node_modules/
 
 # Logs
 *.log
+
+# Audio/Chart Temp
+*.wav
+*.mp3
+*.ogg
+charts/tmp/
