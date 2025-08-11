@@ -67,11 +67,11 @@ function render(){
   });
   // 左右移動ボタン
   const leftBtn = document.createElement('button');
-  leftBtn.textContent = '◀';
+  leftBtn.innerHTML = '<span>◀</span>';
   leftBtn.className = 'nav-btn left';
   leftBtn.onclick = prev;
   const rightBtn = document.createElement('button');
-  rightBtn.textContent = '▶';
+  rightBtn.innerHTML = '<span>▶</span>';
   rightBtn.className = 'nav-btn right';
   rightBtn.onclick = next;
   // 曲送りナビボタンを中央エリアに配置
